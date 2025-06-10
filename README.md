@@ -36,8 +36,8 @@ _It’s like having your own anime sidekick... who can read your mind and probab
 
 ## 📸 Sneak Peek
 
-| Homepage | Chat Interface |
-|----------|----------------|
+| Chat Interface |
+|--------------------------|
 | ![chat](screenshots/chat_page.png) |
 
 ---
