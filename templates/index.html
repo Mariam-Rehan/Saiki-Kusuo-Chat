@@ -1,0 +1,384 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>SaikiGPT - Psychic Chat</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      font-family: 'Inter', sans-serif;
+      color: #333;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 1rem;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 2rem;
+      animation: fadeInDown 0.8s ease-out;
+    }
+
+    .header h1 {
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: white;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+      margin-bottom: 0.5rem;
+    }
+
+    .header p {
+      color: rgba(255,255,255,0.9);
+      font-size: 1.1rem;
+      font-weight: 500;
+    }
+
+    .chat-container {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      border-radius: 20px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+      width: 100%;
+      max-width: 700px;
+      height: 500px;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      animation: fadeInUp 0.8s ease-out;
+    }
+
+    #chat {
+      flex: 1;
+      padding: 1.5rem;
+      overflow-y: auto;
+      scroll-behavior: smooth;
+    }
+
+    #chat::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    #chat::-webkit-scrollbar-track {
+      background: #f1f1f1;
+      border-radius: 10px;
+    }
+
+    #chat::-webkit-scrollbar-thumb {
+      background: #667eea;
+      border-radius: 10px;
+    }
+
+    .message {
+      margin: 1rem 0;
+      padding: 1rem 1.5rem;
+      border-radius: 18px;
+      max-width: 80%;
+      word-wrap: break-word;
+      animation: messageSlideIn 0.3s ease-out;
+      position: relative;
+    }
+
+    .user {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      margin-left: auto;
+      border-bottom-right-radius: 6px;
+      box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+    }
+
+    .bot {
+      background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+      color: white;
+      margin-right: auto;
+      border-bottom-left-radius: 6px;
+      box-shadow: 0 4px 12px rgba(240, 147, 251, 0.3);
+    }
+
+    .bot::before {
+      content: "";
+      position: absolute;
+      left: -15px;
+      top: -10px;
+      width: 40px;
+      height: 40px;
+      background-image: url('/static/saikik.jpg');
+      background-size: cover;
+      background-position: center;
+      border-radius: 50%;
+      border: 2px solid white;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    }
+
+    .input-section {
+      padding: 1.5rem;
+      background: rgba(255, 255, 255, 0.1);
+      border-top: 1px solid rgba(255, 255, 255, 0.2);
+      display: flex;
+      gap: 1rem;
+    }
+
+    .input-wrapper {
+      flex: 1;
+      position: relative;
+    }
+
+    input[type="text"] {
+      width: 100%;
+      padding: 1rem 1.5rem;
+      border: 2px solid transparent;
+      border-radius: 25px;
+      font-size: 1rem;
+      background: white;
+      outline: none;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+
+    input[type="text"]:focus {
+      border-color: #667eea;
+      box-shadow: 0 4px 20px rgba(102, 126, 234, 0.3);
+      transform: translateY(-2px);
+    }
+
+    .send-button {
+      padding: 1rem 2rem;
+      border: none;
+      border-radius: 25px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      font-weight: 600;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .send-button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+    }
+
+    .send-button:active {
+      transform: translateY(0);
+    }
+
+    .typing-indicator {
+      display: none;
+      padding: 1rem 1.5rem;
+      max-width: 80%;
+      margin-right: auto;
+      background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+      border-radius: 18px;
+      border-bottom-left-radius: 6px;
+      color: white;
+      animation: messageSlideIn 0.3s ease-out;
+    }
+
+    .typing-dots {
+      display: inline-flex;
+      gap: 4px;
+    }
+
+    .typing-dots span {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: white;
+      animation: typing 1.4s infinite ease-in-out;
+    }
+
+    .typing-dots span:nth-child(2) {
+      animation-delay: 0.2s;
+    }
+
+    .typing-dots span:nth-child(3) {
+      animation-delay: 0.4s;
+    }
+
+    .footer {
+      margin-top: 1rem;
+      text-align: center;
+      color: rgba(255,255,255,0.8);
+      font-size: 0.9rem;
+    }
+
+    @keyframes fadeInDown {
+      from {
+        opacity: 0;
+        transform: translateY(-30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes messageSlideIn {
+      from {
+        opacity: 0;
+        transform: translateX(-20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+    @keyframes typing {
+      0%, 60%, 100% {
+        transform: translateY(0);
+        opacity: 0.3;
+      }
+      30% {
+        transform: translateY(-10px);
+        opacity: 1;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .header h1 {
+        font-size: 2rem;
+      }
+      
+      .chat-container {
+        height: 400px;
+      }
+      
+      .input-section {
+        flex-direction: column;
+      }
+      
+      .send-button {
+        width: 100%;
+        justify-content: center;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1>🔮 SaikiGPT</h1>
+    <p>Chat with the psychic Saiki Kusuo (if he feels like responding...)</p>
+  </div>
+
+  <div class="chat-container">
+    <div id="chat">
+      <div class="message bot">
+        Yare yare... Another person wants to chat with me. What a pain. Ask me something if you must, but make it quick.
+      </div>
+    </div>
+    
+    <div class="typing-indicator" id="typing-indicator">
+      <img src="/static/saikik.jpg" style="width: 20px; height: 20px; border-radius: 50%; margin-right: 8px; vertical-align: middle;" alt="Saiki"> Saiki is thinking...
+      <div class="typing-dots">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+    </div>
+
+    <div class="input-section">
+      <div class="input-wrapper">
+        <input id="user-input" type="text" placeholder="Type your message to Saiki..." autofocus />
+      </div>
+      <button class="send-button" onclick="sendMessage()">
+        <span>Send</span>
+        <span>📤</span>
+      </button>
+    </div>
+  </div>
+
+  <div class="footer">
+    <p>Powered by psychic abilities and modern technology ✨</p>
+  </div>
+
+  <script>
+    const chat = document.getElementById("chat");
+    const input = document.getElementById("user-input");
+    const typingIndicator = document.getElementById("typing-indicator");
+
+    function appendMessage(text, sender) {
+      const div = document.createElement("div");
+      div.textContent = text;
+      div.className = "message " + sender;
+      chat.appendChild(div);
+      chat.scrollTop = chat.scrollHeight;
+    }
+
+    function showTyping() {
+      typingIndicator.style.display = 'block';
+      chat.scrollTop = chat.scrollHeight;
+    }
+
+    function hideTyping() {
+      typingIndicator.style.display = 'none';
+    }
+
+    async function sendMessage() {
+      const message = input.value.trim();
+      if (!message) return;
+      
+      appendMessage(message, "user");
+      input.value = "";
+      
+      // Show typing indicator
+      showTyping();
+      
+      try {
+        const response = await fetch("/ask", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ message }),
+        });
+        
+        const data = await response.json();
+        
+        // Hide typing indicator and show response
+        hideTyping();
+        appendMessage(data.reply, "bot");
+        
+      } catch (error) {
+        hideTyping();
+        appendMessage("Yare yare... Something went wrong with my telepathy. How annoying.", "bot");
+      }
+    }
+
+    input.addEventListener("keypress", function(e) {
+      if (e.key === "Enter") {
+        sendMessage();
+      }
+    });
+
+    // Auto-focus input when page loads
+    window.addEventListener('load', function() {
+      input.focus();
+    });
+  </script>
+</body>
+</html>
