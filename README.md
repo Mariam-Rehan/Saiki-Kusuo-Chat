@@ -1,7 +1,7 @@
 <div align="center">
 
-# 🔮 SaikiGPT: Your Favorite Pink-Haired Psychic Bot  
-*A telepathic twist on AI chatbots — featuring none other than Saiki Kusuo!*
+# SaikiGPT: Your Favorite Pink-Haired Psychic Bot  
+*Yes I made this just because I love him so much*
 
 ![saiki-gif](https://media.tenor.com/3eReeqTO14MAAAAM/saiki-kusuo-saiki-k.gif)
 </div>
