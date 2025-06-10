@@ -81,6 +81,6 @@ IM A HUUUUGE SAIKI KUSUO FAN!! I rewatch the show like anytime I'm free and I wa
 
 ## 🦄 Let's Connect!
 
-Made with love by [Mariam Rehan](https://www.linkedin.com/in/mariam-rehan)
+Made with love by [Mariam Rehan](https://www.linkedin.com/in/mariam-rehan-/)
 
 ---
