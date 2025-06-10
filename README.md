@@ -36,14 +36,6 @@ _It’s like having your own anime sidekick... who can read your mind and probab
 
 ## 📸 Sneak Peek
 
-| Chat Interface |
-|--------------------------|
-| ![chat](screenshots/chat_page.png) |
-
----
-
-## 📸 Sneak Peek
-
 <p align="center">
   <img src="screenshots/chat_page.png" alt="Saiki Kusuo Chatbot Interface" width="400"/>
 </p>
